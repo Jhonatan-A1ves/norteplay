@@ -7,14 +7,14 @@
 - Crie branches temporárias a partir de `develop`, abra PR para `develop` e aguarde revisão/CI.
 - Promova `develop` para `main` apenas por PR aprovado e validado. Não use force push nem reescreva histórico.
 
-O workspace foi entregue sem repositório Git e a rede não resolveu `github.com`, então branches remotas e proteções não puderam ser verificadas nem configuradas. O repositório local agora está em `develop`, sem commits, e `origin` aponta para o URL informado. Depois de confirmar acesso ao GitHub:
+O workspace local tem as branches `develop` e `main`, com o commit inicial do bootstrap em ambas, e `origin` aponta para o URL informado. Não foi possível confirmar o conteúdo remoto: uma consulta não listou refs e outra falhou por DNS. Antes de publicar, confira as branches no GitHub e rode `git ls-remote --heads origin` novamente. Não presuma que o remoto está vazio se a consulta falhar.
 
-1. Verifique o estado remoto antes de publicar. Se já houver histórico, faça `git fetch origin --prune` e crie/atualize `develop` a partir de `origin/main`, preservando o histórico.
-2. Publique o bootstrap em `develop` após configurar a identidade Git do responsável e revisar os arquivos.
-3. No GitHub, defina `main` como default branch. Crie `develop` a partir de `main` se ainda não existir.
+1. Se o remoto tiver histórico, faça `git fetch origin --prune`, revise os commits e reconcilie as branches sem apagar histórico.
+2. Se confirmar que o remoto está realmente vazio, publique o bootstrap local em `main` e `develop` sem force push.
+3. No GitHub, defina `main` como default branch.
 4. Em `Settings > Rules` (ou branch protection), exija PR e status checks aprovados em `main` e `develop`, bloqueie force push e deleção. Em `main`, exija aprovação de revisão antes do merge.
 
-Se o remoto estiver vazio, crie e publique primeiro um commit inicial na `main`, defina-a como padrão e então publique `develop`. Não force push em nenhum caso.
+Não force push em nenhum caso.
 
 ## Alterações
 
