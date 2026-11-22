@@ -1,0 +1,9 @@
+name: Develop integration
+on:
+  push:
+    branches: [develop]
+permissions:
+  contents: read
+jobs:
+  integration:
+    uses: ./.github/workflows/ci.yml

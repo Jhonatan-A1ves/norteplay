@@ -1,0 +1,38 @@
+name: CI
+on:
+  workflow_call:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - uses: supabase/setup-cli@v3
+        with:
+          version: v2.stable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm secrets:check
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: supabase start -x gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      - run: supabase db lint --local --fail-on error
+      - run: dotnet restore apps/agent/NortePlay.Agent.csproj --configfile NuGet.Config --locked-mode
+      - run: dotnet build apps/agent/NortePlay.Agent.csproj --configuration Release --no-restore

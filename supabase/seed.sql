@@ -1,0 +1,1 @@
+-- Intentionally empty. No business schema or fixture data is provisioned yet.
